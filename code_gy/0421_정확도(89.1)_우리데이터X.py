@@ -1,3 +1,4 @@
+#우리데이터 아님. / 정확도 방식 확인해봐야함. / 
 import torch
 import torch.optim as optim
 import numpy as np
