@@ -150,7 +150,7 @@ with torch.no_grad():
     sum_mse = error(prediction, testY_tensor)
 
     #되돌리기
-    realvalues = testY_tensor * (test_y_denominator + 1e-7) + np.min(testY, 0) 
+    realvalues = prediction * (test_y_denominator + 1e-7) + np.min(testY, 0) 
 
     accuracy = (1 - (sum_mse/76)) * 100
     #정확도 어떤 방식으로 내는지 논문 확인*******************************
