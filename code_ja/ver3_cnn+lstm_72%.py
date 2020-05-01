@@ -59,7 +59,7 @@ trainxy_data = train_data.values
 train_set = trainxy_data [::-1] # (1826, 5)
 
 
-test_data = pd.read_csv('/content/drive/My Drive/Colab Notebooks/캡스톤/data/train.csv', usecols=['rainfall_all','avgtemp_all','humidity_all','GDP','max_power'])
+test_data = pd.read_csv('/content/drive/My Drive/Colab Notebooks/캡스톤/data/test.csv', usecols=['rainfall_all','avgtemp_all','humidity_all','GDP','max_power'])
 testxy_data = test_data.values
 test_set = trainxy_data [::-1] #[365, 5]
 '''
