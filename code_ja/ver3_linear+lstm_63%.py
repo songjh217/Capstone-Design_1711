@@ -1,3 +1,77 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import torch.nn.functional as F
+from google.colab import drive
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+torch.manual_seed(0)
+
+seq_length = 7 
+data_parameter = 5
+hidden_dim = 10 
+output_dim = 1 
+learning_rate = 0.01
+iterations = 500
+
+
+
+train_data = pd.read_csv('/content/drive/My Drive/Colab Notebooks/캡스톤/data/train.csv', usecols=['rainfall_all','avgtemp_all','humidity_all','GDP','max_power'])
+trainxy_data = train_data.values
+train_set = trainxy_data [::-1] # (1826, 5)
+
+
+test_data = pd.read_csv('/content/drive/My Drive/Colab Notebooks/캡스톤/data/test.csv', usecols=['rainfall_all','avgtemp_all','humidity_all','GDP','max_power'])
+testxy_data = test_data.values
+test_set = trainxy_data [::-1] #[365, 5]
+
+def build_dataset(time_series, seq_length):
+  # print(time_series.shape,"d") # (177, 5) / (83, 5)
+  dataX = []
+  dataY = []
+  for i in range(0, len(time_series)-seq_length): 
+    _x = time_series[i:i + seq_length, :-1] 
+    # print(_x.shape,"7 4") #[7, 5]
+    _y = time_series[i+seq_length, [-1]]  #1이 아니라 7이 나와야하는거 아닌가(이건 따로 나뒀을때 : x)
+    # print(_y.shape,"aa")#1 > 7 1 
+    
+    dataX.append(_x)
+    dataY.append(_y)
+    
+  return np.array(dataX), np.array(dataY) 
+
+trainX, trainY = build_dataset(train_set, seq_length)
+testX, testY = build_dataset(test_set, seq_length) 
+
+train_x_numerator = trainX - np.min(trainX, 0) 
+train_x_denominator = np.max(trainX, 0) - np.min(trainX, 0)
+train_x_set = train_x_numerator / (train_x_denominator + 1e-7)
+
+train_y_numerator = trainY - np.min(trainY, 0) 
+train_y_denominator = np.max(trainY, 0) - np.min(trainY, 0)
+train_y_set = train_y_numerator / (train_y_denominator + 1e-7)
+
+
+test_x_numerator = testX - np.min(testX, 0) 
+test_x_denominator = np.max(testX, 0) - np.min(testX, 0)
+test_x_set = test_x_numerator / (test_x_denominator + 1e-7)
+
+test_y_numerator = testY - np.min(testY, 0) 
+test_y_denominator = np.max(testY, 0) - np.min(testY, 0)
+test_y_set = test_y_numerator / (test_y_denominator + 1e-7)
+
+
+trainX_tensor = torch.FloatTensor(train_x_set) 
+trainY_tensor = torch.FloatTensor(train_y_set)
+
+testX_tensor = torch.FloatTensor(test_x_set)
+testY_tensor = torch.FloatTensor(test_y_set)
+
+
 class Power(torch.nn.Module):
   def __init__(self, input_dim, hidden_dim, output_dim, layers):
     super(Power, self).__init__()
@@ -53,7 +127,7 @@ with torch.no_grad():
     realvalues = prediction * (test_y_denominator + 1e-7) + np.min(testY, 0) 
     print(realvalues)
     print(testY)
-    accuracy = (1 - (sum_mse/76)) * 100
+    accuracy = (1 - (sum_mse/365)) * 100
     #정확도 어떤 방식으로 내는지 논문 확인*******************************
     # correct_prediction = torch.argmax(prediction, 1) == testY
     
