@@ -87,12 +87,6 @@ def build_dataset(time_series, seq_length):
   return np.array(dataX), np.array(dataY) 
 
 
-'''
-train_set, total_train_V = minmax_scaler(train_set1)
-test_set, total_test_V  = minmax_scaler(test_set1) 
-print(total_test_V)
-'''
-
 trainX, trainY = build_dataset(train_set, seq_length)
 testX, testY = build_dataset(test_set, seq_length) 
 
@@ -163,28 +157,6 @@ with torch.no_grad():
     print('Accuracy:', accuracy.item())
 
 
-
-'''
-    prediction = power_prediction(testX_tensor)
- 
-
-    #되돌리기
-    realvalues = prediction * (test_y_denominator + 1e-7) + np.min(testY, 0) 
-    print(realvalues)
-    print(testY)
-
-    error = torch.nn.MSELoss(reduction='sum')
-    sum_mse = error(realvalues, torch.FloatTensor(testY))
-    accuracy = (1 - (sum_mse/76)) * 100
-
-    print('Accuracy:', accuracy.item())
-
-
-    #correct_prediction = torch.argmax(prediction, 1) == testY_tensor
-    #accuracy = correct_prediction.float().mean()
-    #print('Accuracy:', accuracy.item())
-
-'''
 
     #정확도 어떤 방식으로 내는지 논문 확인*******************************
     # correct_prediction = torch.argmax(prediction, 1) == testY
