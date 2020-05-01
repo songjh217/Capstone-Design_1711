@@ -68,7 +68,7 @@ train_set = trainxy_data [::-1] # (1826, 5)
 
 test_data = pd.read_csv('./test.csv', usecols=['rainfall_all','avgtemp_all','humidity_all','GDP','max_power'])
 testxy_data = test_data.values
-test_set = trainxy_data [::-1] #[365, 5]
+test_set = testxy_data [::-1] #[365, 5]
 
 
 def minmax_scaler(data):
