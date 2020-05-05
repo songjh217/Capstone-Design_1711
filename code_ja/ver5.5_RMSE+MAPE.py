@@ -138,7 +138,7 @@ for i in range(iterations+1):
       
       
       
- with torch.no_grad():
+with torch.no_grad():
     prediction = power_prediction(testX_tensor)
     prediction_powerV = prediction *(test_y_denominator + 1e-7) + np.min(testY, 0) 
     
