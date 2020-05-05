@@ -165,10 +165,10 @@ with torch.no_grad():
     Y_4 = testY[273:]
     
     #실제값_정규화
-    part_n_1 = prediction[:90]
-    part_n_2 = prediction[90:181]
-    part_n_3 = prediction[181:273]
-    part_n_4 = prediction[273:]
+    Y_tensor_1 = testY_tensor[:90]
+    Y_tensor_2 = testY_tensor[90:181]
+    Y_tensor_3 = testY_tensor[181:273]
+    Y_tensor_4 = testY_tensor[273:]
     
 
     MSE_whole = MSE(testY_tensor,prediction)
