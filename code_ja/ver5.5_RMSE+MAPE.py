@@ -80,11 +80,6 @@ class Power(torch.nn.Module):
 
 power_prediction = Power(1, hidden_dim, output_dim, 1)
 
-criterion = torch.nn.MSELoss() 
-
-optimizer = optim.Adam(power_prediction.parameters(), lr=learning_rate) 
-
-
 def build_dataset(time_series, seq_length):
   dataX = []
   dataY = []
