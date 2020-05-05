@@ -140,25 +140,27 @@ for i in range(iterations+1):
     if i % 100 == 0 :
       print(i, "loss: ", loss.item()) 
       
+      
+      
+      
  with torch.no_grad():
     prediction = power_prediction(testX_tensor)
-    prediction_powerV = prediction *(test_y_denominator + 1e-7) + np.min(testY, 0) #실제 전력예측량(365일)
+    prediction_powerV = prediction *(test_y_denominator + 1e-7) + np.min(testY, 0) 
     
-
-    
-
     #RMSE, MAPE는 분기별
-    MSE = torch.nn.MSELoss() #RMSE
-    p = torch.nn.MSELoss()
-    # print(p.shape)
+    MSE = torch.nn.MSELoss() 
 
     #예측값 4분기
     part_1 = prediction_powerV[:90]
     part_2 = prediction_powerV[90:181]
     part_3 = prediction_powerV[181:273]
     part_4 = prediction_powerV[273:]
-
-    #예측값 4분기
+    
+    #예측값_정규화
+    part_n_1 = prediction[:90]
+    part_n_2 = prediction[90:181]
+    part_n_3 = prediction[181:273]
+    part_n_4 = prediction[273:]
 
 
     #실제값 4분기
@@ -166,20 +168,28 @@ for i in range(iterations+1):
     Y_2 = testY[90:181]
     Y_3 = testY[181:273]
     Y_4 = testY[273:]
-
+    
+    #실제값_정규화
+    part_n_1 = prediction[:90]
+    part_n_2 = prediction[90:181]
+    part_n_3 = prediction[181:273]
+    part_n_4 = prediction[273:]
+    
 
     MSE_whole = MSE(testY_tensor,prediction)
-    MSE_1 = MSE(torch.FloatTensor(Y_1),part_1)
-    MSE_2 = MSE(torch.FloatTensor(Y_2),part_2)
-    MSE_3 = MSE(torch.FloatTensor(Y_3),part_3)
-    MSE_4 = MSE(torch.FloatTensor(Y_4),part_4)
+    MSE_1 = MSE(Y_tensor_1,part_n_1) # 실제:실제값
+    MSE_2 = MSE(Y_tensor_2,part_n_2)
+    MSE_3 = MSE(Y_tensor_3,part_n_3)
+    MSE_4 = MSE(Y_tensor_4,part_n_4)
 
 
-    RMSE_whole = torch.sqrt(MSE_whole)
+    
+    RMSE_whole = torch.sqrt(MSE_whole) #나눠준 후 루트
     RMSE_1 = torch.sqrt(MSE_1)
     RMSE_2 = torch.sqrt(MSE_2)
     RMSE_3 = torch.sqrt(MSE_3)
     RMSE_4 = torch.sqrt(MSE_4)
+
 
 
     MAPE_whole =  np.mean(np.abs((testY - prediction_powerV.numpy()) / testY)) * 100
@@ -189,19 +199,11 @@ for i in range(iterations+1):
     MAPE_4 =  np.mean(np.abs((Y_4 - part_4.numpy()) / Y_4)) * 100
 
 
-
-   
-
-
-plt.plot(testY)
-plt.plot(prediction_powerV.data.numpy())
-plt.legend(['original', 'prediction'])
-plt.show()
-
+    
+    
 #여기서부터는 변수 액셀에 적용하면 굳굳
-
 prediction_powerV_nn = prediction_powerV.numpy() #예측값
-y = testY_tensor.numpy() #실제값
+y = testY #실제값
 
 #RMSE 텐서에서 넘파이 형태로
 RMSE_whole = RMSE_whole.numpy()
@@ -210,7 +212,6 @@ RMSE_2 = RMSE_2.numpy()
 RMSE_3 = RMSE_3.numpy()
 RMSE_4 = RMSE_4.numpy()
 
-#MAPE는 아래의 변수명으로 사용가능(이미 넘파이형태)
 '''
 MAPE_whole
 MAPE_1 
@@ -218,5 +219,27 @@ MAPE_2
 MAPE_3 
 MAPE_4 
 '''
-print('RMSE : ',RMSE_whole)
-print('MAPE : ',MAPE_whole)
+
+#아래는 잘 나오는지 print 확인
+
+print('전력사용량(Y) : ',testY)
+print('전력예측값(prediction) : ',prediction_powerV_nn)
+print()
+#MAPE는 아래의 변수명으로 사용가능(이미 넘파이형태)
+print('RMSE(전체) : ',RMSE_whole)
+print('MAPE(전체) : ',MAPE_whole)
+print()
+print('RMSE(1분기) : ',RMSE_1)
+print('RMSE(2분기) : ',RMSE_2)
+print('RMSE(3분기) : ',RMSE_3)
+print('RMSE(4분기) : ',RMSE_4)
+print()
+print('MAPE(1분기) : ',MAPE_1)
+print('MAPE(2분기) : ',MAPE_2)
+print('MAPE(3분기) : ',MAPE_3)
+print('MAPE(4분기) : ',MAPE_4)
+
+plt.plot(testY)
+plt.plot(prediction_powerV.data.numpy())
+plt.legend(['original', 'prediction'])
+plt.show()
