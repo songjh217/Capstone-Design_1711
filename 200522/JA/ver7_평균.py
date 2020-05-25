@@ -156,8 +156,6 @@ with torch.no_grad():
 
     RMSE = []
     MAPE = []
-    RMSE_W = torch.sqrt(MSE_whole).item()
-    MAPE_W =  np.mean(np.abs((testY - prediction_powerV.numpy()) / testY)) * 100
 
     for i in range(len(prediction)):
       MSE_whole = MSE(testY_tensor[i],prediction[i])
@@ -169,6 +167,9 @@ with torch.no_grad():
       MAPE_whole =  np.mean(np.abs((testY[i] - prediction_powerV[i].numpy()) / testY[i])) * 100
       MAPE.append(MAPE_whole)
       #print('일 :',i+1,"  ",'MAPE :',MAPE_whole)
+    
+    RMSE_W = torch.sqrt(MSE_whole).item()
+    MAPE_W =  np.mean(np.abs((testY - prediction_powerV.numpy()) / testY)) * 100
 
 #RMSE_W, MAPE_W는 전체 한개로 나타낸거 총 1개 데이터
 #RMSE, MAPE는 일별로 나타낸거 총 358개 데이터
