@@ -7,11 +7,13 @@ import torch.nn.init
 import math
 import numpy
 
-train_data = pd.read_csv('./train_heat(14-18).csv', usecols=['heat_all','max_power'])
+train_data = pd.read_csv('./train_heat(14-18).csv', usecols=['rainfall_all',
+                        'avgtemp_all','humidity_all','GDP','max_power'])
 trainxy_data = train_data.values
 train_set = trainxy_data [::-1] 
 
-test_data = pd.read_csv('./test_heat(19).csv', usecols=['heat_all','max_power'])
+test_data = pd.read_csv('./test_heat(19).csv', usecols=['rainfall_all',
+                        'avgtemp_all','humidity_all','GDP','max_power'])
 testxy_data = test_data.values
 test_set = testxy_data [::-1]  
 
@@ -19,7 +21,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 torch.manual_seed(0)
 
 seq_length = 7 
-data_parameter = 2
+data_parameter = 5
 hidden_dim = 10 
 output_dim = 1 
 learning_rate = 0.01
