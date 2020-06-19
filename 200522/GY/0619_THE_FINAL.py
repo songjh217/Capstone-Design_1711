@@ -422,7 +422,7 @@ with torch.no_grad():
     print(prediction_powerV_week.shape)
     
     
-    print(prediction_powerV_week)
+    print(prediction_powerV_week[1:])
     #print(torch.FloatTensor(answer))
 
     prediction_weekend = Power_weekend_prediction(testX_weekend_tensor)
