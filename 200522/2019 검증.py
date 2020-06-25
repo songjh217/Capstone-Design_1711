@@ -23,8 +23,7 @@ iterations = 1000       # epoch 수 (반복학습 횟수)
 # 1. 데이터 불러오기 (+ 데이터 변환_input_data_만들기)
 # *(trainset데이터)
 train_data = pd.read_csv('./jung_train.csv', usecols=['rainfall_all','maxtemp_all','avgtemp_all','sensible_all','GDP','max_power']) 
-                        # pandas를 이용해서 jung_train라는 이름의 csv파일을 콤마(,)를 기준으로 불러온다.
-                        #                     ('jung_train.csv' : 2014~2018년도 데이터들이 정리된 파일)
+                        # pandas를 이용해서 jung_train라는 이름의 csv파일을 콤마(,)를 기준으로 불러온다.('jung_train.csv' : 2014~2018년도 데이터들이 정리된 파일)
                         # 이때, 엑셀에서 rainfall_all(강수량),maxtemp_all(최고기온),avgtemp_all(평균기온),sensible_all(체감온도),GDP,max_power(실제최대전력량)이란
                         #                                                                                                          이름의 열의 데이터만 불러온다.
                         # 예측요소는 6개
